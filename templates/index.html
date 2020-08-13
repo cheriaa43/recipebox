@@ -1,4 +1,7 @@
 <h1>{{recipe_box}}</h1>
+{% if request.user.is_authenticated %}
+  <h3>Welcome, {{ request.user.author.name }}</h3>
+{% endif %}
 <ul>
   {% for recipe in recipes %}
   <li>
@@ -7,4 +10,10 @@
   {% endfor %}
 </ul>
 <a href="addrecipe/">Add Recipe</a>
+<br>
 <a href="addauthor/">Add Author</a>
+<br>
+<br>
+{% if request.user.is_authenticated %}
+  <a href="logout/">Logout!</a>
+{% endif %}
