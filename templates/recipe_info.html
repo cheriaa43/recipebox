@@ -10,3 +10,11 @@
         <h3>Instructions:</h3>
         <p>{{ recipe.instructions }}</p>
     {% endif %}
+
+<div>
+    <p>
+        <button><a href='/fave/{{recipe.id}}'>Add to favorites</a></button>
+    </p>
+    <p>{{favorite.id}}</p>
+    <p><a href="/editRecipe/{{recipe.id}}">Edit Recipe</a></p>
+</div>

@@ -1,10 +1,11 @@
+
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.http import HttpResponseForbidden
 from django.shortcuts import HttpResponseRedirect, render, reverse
 
-from recipe.forms import AddAuthorForm, AddRecipeForm, LoginForm
+from recipe.forms import AddAuthorForm, AddRecipeForm, LoginForm, EditRecipe
 from recipe.models import Author, Recipe
 
 
@@ -81,4 +82,31 @@ def login_view(request):
 
 def logout_view(request):
     logout(request)
+    return HttpResponseRedirect(reverse("homepage"))
+
+def edit_recipe(request, id):
+    html = 'generic_form.html'
+    instance = Recipe.objects.get(id=id)
+    if request.method == 'POST':
+        form = EditRecipe(request.POST, instance=instance)
+        if form.is_valid():
+            form.save()
+
+            return HttpResponseRedirect(reverse("homepage"))
+
+    form = EditRecipe(instance=instance)
+
+    return render(request, html, {'form': form})
+
+
+def add_fave(request, id):
+    recipe = None
+    user = None
+    try:
+        recipe = Recipe.objects.get(id=id)
+        user = Author.objects.get(name=request.user.username)
+        user.faves.add(recipe)
+        user.save()
+    except Exception as e:
+        print(e)
     return HttpResponseRedirect(reverse("homepage"))
